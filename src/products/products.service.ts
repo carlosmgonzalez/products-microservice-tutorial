@@ -87,4 +87,24 @@ export class ProductsService extends PrismaClient implements OnModuleInit {
     // Sofe delete:
     return this.product.update({ where: { id }, data: { available: false } });
   }
+
+  async validateProducts(ids: number[]) {
+    ids = Array.from(new Set(ids));
+
+    const products = await this.product.findMany({
+      where: {
+        id: {
+          in: ids,
+        },
+      },
+    });
+
+    if (products.length !== ids.length)
+      throw new RpcException({
+        status: HttpStatus.BAD_REQUEST,
+        message: `Some product with this ids ${JSON.stringify(ids)} not found`,
+      });
+
+    return products;
+  }
 }

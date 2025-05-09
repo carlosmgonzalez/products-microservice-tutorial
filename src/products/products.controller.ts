@@ -25,16 +25,17 @@ export class ProductsController {
   }
 
   @MessagePattern({ cmd: 'update_product' })
-  update(
-    // @Param('id', ParseIntPipe) id: number,
-    // @Body() updateProductDto: UpdateProductDto,
-    @Payload() updateProductDto: UpdateProductDto,
-  ) {
+  update(@Payload() updateProductDto: UpdateProductDto) {
     return this.productsService.update(updateProductDto);
   }
 
   @MessagePattern({ cmd: 'delete_product' })
   remove(@Payload('id', ParseIntPipe) id: number) {
     return this.productsService.remove(id);
+  }
+
+  @MessagePattern({ cmd: 'validate_products' })
+  validateProducts(@Payload() ids: number[]) {
+    return this.productsService.validateProducts(ids);
   }
 }
